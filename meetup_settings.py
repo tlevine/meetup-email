@@ -41,9 +41,12 @@ def main():
     html = fromstring(r.text)
     meetups = html.xpath('//a[text()="Email and notification settings"]/@href')
     for meetup in meetups:
-        print meetup
-        s = unsubscribe(s, meetup)
-        sleep(normalvariate(10, 5))
+        try:
+            s = unsubscribe(s, meetup)
+        except:
+            print 'Error at ', meetup
+        else:
+            sleep(max(0, normalvariate(10, 5)))
 
 if __name__ == '__main__':
     main()
