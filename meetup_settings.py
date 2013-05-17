@@ -6,6 +6,12 @@ from time import sleep
 from random import normalvariate
 s = session()
 
+SKIP = {
+    'http://www.meetup.com/DataKind-NYC/settings/',
+    'http://www.meetup.com/nyhackr/settings/',
+    'http://www.meetup.com/Hadoop-NYC/settings/',
+}
+
 def login():
     s.post('https://secure.meetup.com/login/', {
         'email': os.environ['MEETUP_EMAIL_ADDRESS'],
@@ -41,6 +47,8 @@ def main():
     html = fromstring(r.text)
     meetups = html.xpath('//a[text()="Email and notification settings"]/@href')
     for meetup in meetups:
+        if meetup in SKIP:
+            continue
         try:
             s = unsubscribe(s, meetup)
         except:
